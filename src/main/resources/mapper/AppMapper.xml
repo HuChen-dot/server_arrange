@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.server.mapper.AppMapper">
+
+    <sql id="Base_Column_List">
+        `id`
+        as `id`,
+                `app_name` as `appName`,
+                `server` as `server`,
+                `port` as `port`,
+                `sh_file` as `shFile`,
+                `run_version` as `runVersion`,
+                `await_start_time` as `awaitStartTime`,
+                `jvm_args` as `jvmArgs`,
+                `del` as `del`,
+                `create_by` as `createBy`,
+                `create_time` as `createTime`,
+                `update_by` as `updateBy`,
+                `update_time` as `updateTime`
+    </sql>
+
+    <sql id="Base_Column_List_if">
+        <if test="id != null">
+            and `id` = #{id}
+        </if>
+        <if test="appName != null and appName != ''">
+            and `app_name` = #{appName}
+        </if>
+        <if test="port != null and port != ''">
+            and `port` = #{port}
+        </if>
+        <if test="server != null and server != ''">
+            and `server` = #{server}
+        </if>
+        <if test="shFile != null and shFile != ''">
+            and `sh_file` = #{shFile}
+        </if>
+        <if test="runVersion != null and runVersion != ''">
+            and `run_version` = #{runVersion}
+        </if>
+        <if test="awaitStartTime != null and awaitStartTime != ''">
+            and `await_start_time` = #{awaitStartTime}
+        </if>
+        <if test="jvmArgs != null and jvmArgs != ''">
+            and `jvm_args` = #{jvmArgs}
+        </if>
+        <if test="del != null">
+            and `del` = #{del}
+        </if>
+        <if test="createBy != null and createBy != ''">
+            and `create_by` = #{createBy}
+        </if>
+        <if test="createTime != null">
+            and `create_time` = #{createTime}
+        </if>
+        <if test="updateBy != null and updateBy != ''">
+            and `update_by` = #{updateBy}
+        </if>
+        <if test="updateTime != null">
+            and `update_time` = #{updateTime}
+        </if>
+    </sql>
+
+    <!-- 主键查询 -->
+    <select id="selectByPrimaryKey" resultType="com.server.pojo.entity.App">
+        select
+        <include refid="Base_Column_List"/>
+        from `app`
+        where id = #{primaryKey}
+    </select>
+
+    <!-- 多条件查询-->
+    <select id="select" resultType="com.server.pojo.entity.App"
+            parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List"/>
+        from `app`
+        <trim prefix="where" prefixOverrides="and | or">
+            <include refid="Base_Column_List_if"/>
+        </trim>
+    </select>
+
+    <select id="selectByAppName" resultType="com.server.pojo.entity.App"
+            parameterType="string">
+        select
+        <include refid="Base_Column_List"/>
+        from `app`
+        <where>
+            `app_name` = #{appName}
+            and del = 0
+        </where>
+
+    </select>
+
+
+    <!-- 流式查询：根据条件查询；可以设置 fetchSize 属性设置一次流查询多少条数据，直至取完数据-->
+    <select id="flowSelect" resultType="com.server.pojo.entity.App"
+            parameterType="java.util.Map" fetchSize="200">
+        select
+        <include refid="Base_Column_List"/>
+        from `app`
+        <trim prefix="where" prefixOverrides="and | or">
+            <include refid="Base_Column_List_if"/>
+        </trim>
+    </select>
+
+
+    <!--  添加 -->
+    <insert id="save" parameterType="com.server.pojo.entity.App"
+            useGeneratedKeys="true" keyProperty="id"
+    >
+        insert into `app`(
+        <trim suffixOverrides=",">
+
+            <if test="appName != null and appName != ''">
+                `app_name`,
+            </if>
+            <if test="server != null and server != ''">
+                `server`,
+            </if>
+
+            <if test="port != null and port != ''">
+                `port`,
+            </if>
+
+            <if test="shFile != null and shFile != ''">
+                `sh_file`,
+            </if>
+
+            <if test="runVersion != null and runVersion != ''">
+                `run_version`,
+            </if>
+
+            <if test="awaitStartTime != null and awaitStartTime != ''">
+                `await_start_time`,
+            </if>
+
+            <if test="jvmArgs != null and jvmArgs != ''">
+                `jvm_args`,
+            </if>
+
+            <if test="del != null">
+                `del`,
+            </if>
+
+            <if test="createBy != null and createBy != ''">
+                `create_by`,
+            </if>
+            `create_time`,
+
+            <if test="updateBy != null and updateBy != ''">
+                `update_by`,
+            </if>
+            `update_time`
+        </trim>
+        )
+        values(
+        <trim suffixOverrides=",">
+            <if test="appName != null and appName != ''">
+                #{appName},
+            </if>
+            <if test="server != null and server != ''">
+                #{server},
+            </if>
+            <if test="port != null and port != ''">
+                #{port},
+            </if>
+            <if test="shFile != null and shFile != ''">
+                #{shFile},
+            </if>
+            <if test="runVersion != null and runVersion != ''">
+                #{runVersion},
+            </if>
+            <if test="awaitStartTime != null and awaitStartTime != ''">
+                #{awaitStartTime},
+            </if>
+            <if test="jvmArgs != null and jvmArgs != ''">
+                #{jvmArgs},
+            </if>
+            <if test="del != null">
+                #{del},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                #{createBy},
+            </if>
+            now(),
+            <if test="updateBy != null and updateBy != ''">
+                #{updateBy},
+            </if>
+            now()
+        </trim>
+        )
+    </insert>
+
+    <!--  批量添加 -->
+    <insert id="batchSave" parameterType="list" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        insert into `app`(
+        `app_name`,
+        `port`,
+        `sh_file`,
+        `run_version`,
+        `await_start_time`,
+        `jvm_args`,
+        `del`,
+        `create_by`,
+        `create_time`,
+        `update_by`,
+        `update_time`
+        )
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.appName},
+            #{item.port},
+            #{item.shFile},
+            #{item.runVersion},
+            #{item.awaitStartTime},
+            #{item.jvmArgs},
+            #{item.del},
+            #{item.createBy},
+            now(),
+            #{item.updateBy},
+            now()
+            )
+        </foreach>
+    </insert>
+
+    <!--  添加或者修改 -->
+    <insert id="saveOrUpdate" parameterType="com.server.pojo.entity.App">
+        insert into `app`(
+        <trim suffixOverrides=",">
+            <if test="id != null">
+                `id`,
+            </if>
+            <if test="appName != null and appName != ''">
+                `app_name`,
+            </if>
+            <if test="port != null and port != ''">
+                `port`,
+            </if>
+            <if test="shFile != null and shFile != ''">
+                `sh_file`,
+            </if>
+            <if test="runVersion != null and runVersion != ''">
+                `run_version`,
+            </if>
+            <if test="awaitStartTime != null and awaitStartTime != ''">
+                `await_start_time`,
+            </if>
+            <if test="jvmArgs != null and jvmArgs != ''">
+                `jvm_args`,
+            </if>
+            <if test="del != null">
+                `del`,
+            </if>
+            <if test="createBy != null and createBy != ''">
+                `create_by`,
+            </if>
+            `create_time`,
+            <if test="updateBy != null and updateBy != ''">
+                `update_by`,
+            </if>
+            `update_time`
+        </trim>
+        )
+        values(
+        <trim suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="appName != null and appName != ''">
+                #{appName},
+            </if>
+            <if test="port != null and port != ''">
+                #{port},
+            </if>
+            <if test="shFile != null and shFile != ''">
+                #{shFile},
+            </if>
+            <if test="runVersion != null and runVersion != ''">
+                #{runVersion},
+            </if>
+            <if test="awaitStartTime != null and awaitStartTime != ''">
+                #{awaitStartTime},
+            </if>
+            <if test="jvmArgs != null and jvmArgs != ''">
+                #{jvmArgs},
+            </if>
+            <if test="del != null">
+                #{del},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                #{createBy},
+            </if>
+            now(),
+            <if test="updateBy != null and updateBy != ''">
+                #{updateBy},
+            </if>
+            now()
+        </trim>
+        )
+        ON DUPLICATE KEY UPDATE
+        <trim suffixOverrides=",">
+            <if test="id != null">
+                `id` = #{id},
+            </if>
+            <if test="appName != null and appName != ''">
+                `app_name` = #{appName},
+            </if>
+            <if test="port != null and port != ''">
+                `port` = #{port},
+            </if>
+            <if test="shFile != null and shFile != ''">
+                `sh_file` = #{shFile},
+            </if>
+            <if test="runVersion != null and runVersion != ''">
+                `run_version` = #{runVersion},
+            </if>
+            <if test="awaitStartTime != null and awaitStartTime != ''">
+                `await_start_time` = #{awaitStartTime},
+            </if>
+            <if test="jvmArgs != null and jvmArgs != ''">
+                `jvm_args` = #{jvmArgs},
+            </if>
+            <if test="del != null">
+                `del` = #{del},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                `create_by` = #{createBy},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                `update_by` = #{updateBy},
+            </if>
+            update_time=now()
+        </trim>
+    </insert>
+
+    <!--  修改 -->
+    <update id="update" parameterType="java.util.Map">
+        update `app`
+        <trim prefix="set" suffixOverrides=",">
+            <if test="appName != null and appName != ''">
+                `app_name` = #{appName},
+            </if>
+            <if test="port != null and port != ''">
+                `port` = #{port},
+            </if>
+            <if test="shFile != null and shFile != ''">
+                `sh_file` = #{shFile},
+            </if>
+            <if test="runVersion != null and runVersion != ''">
+                `run_version` = #{runVersion},
+            </if>
+            <if test="awaitStartTime != null and awaitStartTime != ''">
+                `await_start_time` = #{awaitStartTime},
+            </if>
+            <if test="jvmArgs != null and jvmArgs != ''">
+                `jvm_args` = #{jvmArgs},
+            </if>
+            <if test="del != null">
+                `del` = #{del},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                `create_by` = #{createBy},
+            </if>
+            <if test="createTime != null">
+                `create_time` = #{createTime},
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                `update_by` = #{updateBy},
+            </if>
+            `update_time` = now()
+        </trim>
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="idIf != null">
+                and `id` = #{idIf}
+            </if>
+            <if test="appNameIf != null">
+                and `app_name` = #{appNameIf}
+            </if>
+            <if test="portIf != null">
+                and `port` = #{portIf}
+            </if>
+            <if test="shFileIf != null">
+                and `sh_file` = #{shFileIf}
+            </if>
+            <if test="runVersionIf != null">
+                and `run_version` = #{runVersionIf}
+            </if>
+            <if test="awaitStartTimeIf != null">
+                and `await_start_time` = #{awaitStartTimeIf}
+            </if>
+            <if test="jvmArgsIf != null">
+                and `jvm_args` = #{jvmArgsIf}
+            </if>
+            <if test="delIf != null">
+                and `del` = #{delIf}
+            </if>
+            <if test="createByIf != null">
+                and `create_by` = #{createByIf}
+            </if>
+            <if test="createTimeIf != null">
+                and `create_time` = #{createTimeIf}
+            </if>
+            <if test="updateByIf != null">
+                and `update_by` = #{updateByIf}
+            </if>
+            <if test="updateTimeIf != null">
+                and `update_time` = #{updateTimeIf}
+            </if>
+        </trim>
+    </update>
+
+
+    <delete id="del" parameterType="long">
+        delete from  app where id = #{appId}
+    </delete>
+
+</mapper>

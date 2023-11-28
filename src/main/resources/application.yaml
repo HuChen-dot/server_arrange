@@ -1,0 +1,54 @@
+server:
+  port: 8002
+
+
+spring:
+  # 服务名
+  application:
+    name: server_arrange
+  # 指定执行环境
+  profiles:
+    active: test
+
+
+webhook:
+  url: https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=7cd5c78c-bf49-45fd-9c56-329547e2dfde
+
+ftp:
+  skyIp: '10.99.10.123:11800'
+  serverIps:
+    - 10.99.10.122
+  whitelist:
+    - wison-punch
+    - wison-scm
+    - wison-report
+    - wison-mes-synchronized
+    - wison-databases-log
+    - wison-dept
+    - wison-gateway
+    - wison-obs
+  skipCatalogue:
+    - logs
+    - BomUploadFile
+    - EmployersProvidesUploadFile
+    - temps
+
+knife4j:
+  enable: true
+
+
+#指定Mapper映射文件的位置和Mapper接口位置
+mybatis:
+  # 扫描mapper.xml文件所在位置
+  mapper-locations: classpath:mapper/**.xml
+  # 配置别名映射
+  type-aliases-package: com.server.pojo.entity.*
+  configuration:
+    #开启驼峰映射
+    map-underscore-to-camel-case: true
+
+# PageHelper分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
