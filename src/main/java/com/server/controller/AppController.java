@@ -35,8 +35,8 @@ public class AppController {
      */
     @GetMapping("/runShell")
     @ApiOperation("运行脚本")
-    public String test(String ip,String shell) throws Exception {
-        return CmdUtil.linuxExecShell(ip,shell);
+    public String runShell(String ip, String shell) throws Exception {
+        return CmdUtil.linuxExecShell(ip, shell);
     }
 
 
