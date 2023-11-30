@@ -222,18 +222,26 @@ public class AppServiceImpl {
         List<String> subdirectory = getFileList(null, rootDirectory + "/" + appName);
         List<Date> cacheList = new ArrayList<>();
         Map<String, String> cacheMap = new HashMap<>();
+
+
         for (String file : subdirectory) {
             if (skipCatalogue.contains(file)) {
                 continue;
             }
-            String s1 = file.replace("~", " ").replace(".", ":");
-            cacheMap.put(s1, file);
-            cacheList.add(DateUtil.string2Date(s1));
+            try {
+                String s1 = file.replace("~", " ").replace(".", ":");
+                cacheMap.put(s1, file);
+                cacheList.add(DateUtil.string2Date(s1));
+            } catch (Exception e) {
+                throw new BusinessException("错误的文件或目录：" + file);
+            }
         }
+
 
         List<Date> collect = cacheList.stream().sorted().collect(Collectors.toList());
 
         List<String> items = new ArrayList<>();
+
         for (int i = (collect.size() - 1); i >= 0; i--) {
             items.add(cacheMap.get(DateUtil.date2String(collect.get(i))));
         }
