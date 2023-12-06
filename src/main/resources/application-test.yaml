@@ -12,7 +12,6 @@ spring:
 logging:
   level:
     com.wison.punch.web.punch.mapper: debug
-    com.wison.punch.web.tag.mapper: debug
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
